@@ -1,5 +1,6 @@
 # Lace Bulk DRep Delegation Tool
-A simple, browser-based tool for delegating multiple Cardano stake keys to a single Delegated Representative (DRep) in a single transaction. This dApp is built with Cometa.js and is designed for use with Lace.
+
+A simple, browser-based tool for delegating multiple Cardano stake keys to a single Delegated Representative (DRep) in a single transaction. This dApp is built with [Cometa.js](https://github.com/Biglup/cometa.js) and is designed for use with Lace.
 
 ## Features
 
