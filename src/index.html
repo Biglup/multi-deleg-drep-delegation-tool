@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Cometa - Lace Bulk DRep Delegation</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="container">
+    <h1>Bulk DRep Delegation for Lace Multi-Delegation</h1>
+    <a href="https://github.com/Biglup/multi-deleg-drep-delegation-tool" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+
+    <div id="connect-section">
+        <h2>1. Configure and Connect</h2>
+        <select id="network-select">
+            <option value="preprod">Preprod Testnet</option>
+            <option value="preview">Preview Testnet</option>
+            <option value="mainnet">Mainnet</option>
+        </select>
+        <input type="text" id="blockfrost-key-input" placeholder="Enter Blockfrost Project ID for selected network" />
+        <button id="connect-btn">Connect Lace Wallet</button>
+        <button id="disconnect-btn" class="hidden">Disconnect</button>
+    </div>
+
+    <div id="delegate-section" class="hidden">
+        <h2>2. Registered Stake Keys Found</h2>
+        <div id="keys-display"></div>
+
+        <h2>3. Delegate to DRep</h2>
+        <input type="text" id="drep-id-input" placeholder="Enter DRep ID (e.g., drep1...)" />
+        <button id="delegate-btn" disabled>Delegate All Keys</button>
+    </div>
+
+    <pre id="log-output">Awaiting connection...</pre>
+</div>
+
+<footer class="site-footer">
+    <a href="https://github.com/Biglup/cometa-js" target="_blank" rel="noopener noreferrer">
+        <p>Powered by</p> <img src="images/cometa_js.png" alt="Cometa.js Logo" />
+    </a>
+</footer>
+
+<script src="https://unpkg.com/@biglup/cometa@1.1.101/dist/iife/index.global.js"></script>
+<script type="module" src="scripts/main.js"></script>
+</body>
+</html>
