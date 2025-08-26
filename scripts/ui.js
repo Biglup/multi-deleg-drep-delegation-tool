@@ -52,7 +52,6 @@ export const resetUI = () => {
     keysDisplay.innerHTML = '';
     drepIdInput.value = '';
     connectBtn.disabled = false;
-    blockfrostKeyInput.disabled = false;
     networkSelect.disabled = false;
     delegateBtn.disabled = true;
     log('Wallet disconnected. Please reconnect to continue.');

@@ -21,8 +21,35 @@ import { setState } from '../app-state.js';
 
 /* DEFINITIONS ****************************************************************/
 
+const PROXY_URL = 'https://cardano-blockfrost-proxy.arcangelz.workers.dev/';
 const WALLET_NAME = 'lace';
 
+const networkMap = {
+    mainnet: Cometa.NetworkMagic.Mainnet,
+    preprod: Cometa.NetworkMagic.Preprod,
+    preview: Cometa.NetworkMagic.Preview,
+};
+
+const magicMap = {
+    [Cometa.NetworkMagic.Mainnet]: 'Mainnet',
+    [Cometa.NetworkMagic.Preprod]: 'Preprod',
+    [Cometa.NetworkMagic.Preview]: 'Preview'
+};
+
+/**
+ * Creates a new provider instance configured to use the correct, full proxy URL.
+ * @returns {Cometa.BlockfrostProvider} A configured provider instance.
+ */
+const createProvider = () => {
+    const selectedNetwork = ui.networkSelect.value;
+    const fullProxyUrl = `${PROXY_URL}${selectedNetwork}/`;
+
+    return new Cometa.BlockfrostProvider({
+        baseUrl: fullProxyUrl,
+        network: networkMap[selectedNetwork],
+        projectId: '',
+    });
+};
 /**
  * Waits for the browser wallet extension to inject the `window.cardano` object.
  * @param {number} [timeout=3000] - The maximum time to wait in milliseconds.
@@ -51,19 +78,8 @@ export const waitForCardanoWallet = (timeout = 3000) => {
  * @throws {Error} If the project ID is missing.
  */
 const getUserInputs = () => {
-    const projectId = ui.blockfrostKeyInput.value.trim();
-    if (!projectId) {
-        throw new Error('Please enter a Blockfrost Project ID.');
-    }
-
-    const networkMap = {
-        mainnet: Cometa.NetworkMagic.Mainnet,
-        preprod: Cometa.NetworkMagic.Preprod,
-        preview: Cometa.NetworkMagic.Preview,
-    };
     const network = networkMap[ui.networkSelect.value];
-
-    return { network, projectId };
+    return { network };
 };
 
 /**
@@ -83,7 +99,6 @@ const updateUIOnConnect = (stakeKeys) => {
     ui.disconnectBtn.classList.remove('hidden');
     ui.delegateBtn.disabled = false;
     ui.connectBtn.disabled = true;
-    ui.blockfrostKeyInput.disabled = true;
     ui.networkSelect.disabled = true;
 };
 
@@ -92,20 +107,25 @@ const updateUIOnConnect = (stakeKeys) => {
  */
 export const connectWallet = async () => {
     try {
-        const { network, projectId } = getUserInputs();
+        const { network} = getUserInputs();
 
         ui.log('Waiting for wallet extension...');
         const walletApi = await waitForCardanoWallet();
 
         ui.log(`Connecting to ${WALLET_NAME} and requesting CIP-95 access...`);
-        const cip30Api = await walletApi.enable({ extensions: [{ cip: 95 }] });
+        const cip30Api = await walletApi.enable({ extensions: [{ cip: 95 }, { cip: 142}] });
 
-        const provider = new Cometa.BlockfrostProvider({ network, projectId });
+        const provider = createProvider();
         const wallet = new Cometa.BrowserExtensionWallet(cip30Api, provider);
 
         const walletNetworkId = await wallet.getNetworkId();
+        const walletMagic = await wallet.getNetworkMagic();
         const isMainnet = walletNetworkId === 1;
         const selectedIsMainnet = network === Cometa.NetworkMagic.Mainnet;
+
+        if (walletMagic !== network) {
+            throw new Error(`Network missmatch. Your wallet is set to ${magicMap[walletMagic]}, but you selected ${magicMap[network]}`);
+        }
 
         if (isMainnet !== selectedIsMainnet) {
             throw new Error('Wallet and dropdown network selection do not match.');

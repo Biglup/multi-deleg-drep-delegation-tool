@@ -19,7 +19,7 @@
 import { connectWallet } from './handlers/connect-handler.js';
 import { delegate } from './handlers/delegate-handler.js';
 import * as ui from './ui.js';
-import { resetState } from './app-state.js';
+import { resetState, state } from './app-state.js';
 
 /* DEFINITIONS ****************************************************************/
 
@@ -39,5 +39,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     ui.disconnectBtn.addEventListener('click', () => {
         resetState();
         ui.resetUI();
+    });
+
+    ui.networkSelect.addEventListener('change', () => {
+        if (state.wallet) {
+            ui.log('Network changed. Re-initializing wallet connection...');
+            connectWallet();
+        }
     });
 });

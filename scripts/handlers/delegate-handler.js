@@ -87,7 +87,8 @@ export const delegate = async () => {
         const unsignedTx = await buildDelegationTransaction(drepId);
         await signAndSubmitTransaction(unsignedTx);
     } catch (error) {
-        ui.log(`Transaction failed: ${error.message}`, 'error');
+        console.error(error)
+        ui.log(`Transaction failed: ${error}`, 'error');
     } finally {
         ui.delegateBtn.disabled = false;
     }
