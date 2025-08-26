@@ -2,7 +2,7 @@
 
 A simple, browser-based tool for delegating multiple Cardano stake keys to a single Delegated Representative (DRep) in a single transaction. This dApp is built with [Cometa.js](https://github.com/Biglup/cometa.js) and is designed for use with Lace.
 
-You can use the tool at https://biglup.github.io/multi-deleg-drep-delegation-tool/
+You can use the tool at [https://multidelegate-dreps.cometa.dev/](https://multidelegate-dreps.cometa.dev/)
 ## Features
 
 - Connects to Lace.
